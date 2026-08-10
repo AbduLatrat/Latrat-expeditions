@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Package Details - Latrat Expeditions</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="icon.jpg">
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="brand-logo">
+        <img src="icon.jpg" alt="Latrat Expeditions" class="brand-image" />
+        <span class="logo-text">Latrat <span>Expeditions</span></span>
+      </a>
+    </div>
+  </header>
+
+  <main style="padding:100px 20px 40px;max-width:1100px;margin:0 auto">
+    <div id="packageRoot"></div>
+  </main>
+
+  <footer style="margin-top:40px;text-align:center;padding:20px 0;color:#6b7280">&copy; 2026 Latrat Expeditions</footer>
+
+  <script>
+    const PACKAGE_STORAGE_KEY = 'latrat_expeditions_packages_v1';
+
+    const defaultPackages = (function(){
+      try { return JSON.parse(localStorage.getItem(PACKAGE_STORAGE_KEY)) || []; } catch(e){ return []; }
+    })();
+
+    function loadPackages() {
+      try {
+        const stored = localStorage.getItem(PACKAGE_STORAGE_KEY);
+        if (!stored) return defaultPackages;
+        const parsed = JSON.parse(stored);
+        return Array.isArray(parsed) && parsed.length ? parsed : defaultPackages;
+      } catch (e) {
+        return defaultPackages;
+      }
+    }
+
+    function findPackageById(id){
+      const packages = loadPackages();
+      return packages.find(p=>p.id===id) || null;
+    }
+
+    function renderPackage(pkg){
+      const root = document.getElementById('packageRoot');
+      if(!pkg){ root.innerHTML = '<p>Package not found.</p>'; return; }
+      root.innerHTML = `
+        <article class="detail-header">
+          <div style="display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:12px">
+            <div>
+              <div style="color:#f59e0b;font-weight:700">${pkg.topDestination? 'Top Destination' : pkg.mostVisited? 'Most Visited' : 'Featured'}</div>
+              <h1 style="margin:6px 0 4px">${pkg.title}</h1>
+              <div style="color:#6b7280">${pkg.location}</div>
+            </div>
+            <div style="text-align:right">
+              <div style="font-weight:800;color:#1b4332">${pkg.price}</div>
+              <div style="color:#6b7280">${pkg.rating} • ${pkg.visits} visits</div>
+            </div>
+          </div>
+          <div class="detail-image-wrapper"><img src="${pkg.image}" alt="${pkg.title}"></div>
+          <div style="margin-top:18px;color:#111827;line-height:1.8">${pkg.details}</div>
+          <div style="margin-top:18px">
+            <h3>What to expect</h3>
+            <ul>${(pkg.highlights||[]).map(h=>`<li>${h}</li>`).join('')}</ul>
+          </div>
+          <div style="margin-top:20px;display:flex;gap:12px">
+            <button class="btn btn-primary" onclick="location.href='index.html'">Back</button>
+            <button class="btn btn-outline" onclick="alert('Booking flow not connected here yet')">Request Booking</button>
+          </div>
+        </article>
+      `;
+    }
+
+    // parse id from query
+    (function(){
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      // if this load was a page reload, go back to home
+      try { const nav = performance.getEntriesByType('navigation')[0]; if (nav && nav.type === 'reload') { window.location.href = 'index.html'; return; } } catch(e){}
+
+      // try to fetch packages from server first
+      (async function(){
+        let pkg = null;
+        try {
+          const res = await fetch('/packages');
+          if (res.ok) {
+            const data = await res.json();
+            pkg = (data || []).find(p=>p.id===id) || null;
+          }
+        } catch(e){}
+        if (!pkg) pkg = findPackageById(id);
+        renderPackage(pkg);
+      })();
+    })();
+  </script>
+</body>
+</html>

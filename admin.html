@@ -1,0 +1,177 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin - Latrat Expeditions</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="icon.jpg">
+</head>
+<body>
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="index.html" class="brand-logo">
+        <img src="icon.jpg" alt="Latrat Expeditions" class="brand-image" />
+        <span class="logo-text">Latrat <span>Expeditions</span></span>
+      </a>
+      <div style="margin-left:auto"><button id="adminSignOut" class="btn btn-outline">Sign out</button></div>
+    </div>
+  </header>
+
+  <main style="padding:100px 20px">
+  <section class="section admin-section" id="adminSection">
+    <div class="container">
+      <div class="section-header">
+        <span class="sub-title">Admin Dashboard</span>
+        <h2>Manage Safari Packages</h2>
+        <p>Use the dashboard to add, edit, and feature packages as top destinations or most visited journeys.</p>
+      </div>
+      <div class="admin-summary-grid">
+        <div class="admin-card"><span>Total Packages</span><strong id="adminTotalPackages">0</strong></div>
+        <div class="admin-card"><span>Top Destinations</span><strong id="adminTopPackages">0</strong></div>
+        <div class="admin-card"><span>Most Visited</span><strong id="adminVisitedPackages">0</strong></div>
+      </div>
+      <div class="admin-panel">
+        <div class="admin-panel-left">
+          <div class="admin-card admin-form-card">
+            <h3 id="adminFormTitle">Add New Package</h3>
+            <form id="adminPackageForm">
+              <input type="hidden" id="adminPackageId">
+              <div class="form-group">
+                <label for="adminPackageTitle">Package Title</label>
+                <input type="text" id="adminPackageTitle" required>
+              </div>
+              <div class="form-group">
+                <label for="adminPackageLocation">Location</label>
+                <input type="text" id="adminPackageLocation" required>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="adminPackageCountry">Country</label>
+                  <select id="adminPackageCountry">
+                    <option value="uganda">Uganda</option>
+                    <option value="kenya">Kenya</option>
+                    <option value="tanzania">Tanzania</option>
+                    <option value="rwanda">Rwanda</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="adminPackageType">Type</label>
+                  <select id="adminPackageType">
+                    <option value="safari">Wildlife Safari</option>
+                    <option value="gorilla">Gorilla Trekking</option>
+                    <option value="mountain">Mountain Adventure</option>
+                    <option value="cultural">Cultural Tour</option>
+                    <option value="beach">Beach Escape</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="adminPackageDuration">Duration</label>
+                  <select id="adminPackageDuration">
+                    <option value="short">1 - 4 Days</option>
+                    <option value="medium">5 - 9 Days</option>
+                    <option value="long">10+ Days</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="adminPackagePrice">Price</label>
+                  <input type="text" id="adminPackagePrice" placeholder="$1,999 / person" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="adminPackageRating">Rating</label>
+                <input type="text" id="adminPackageRating" placeholder="★ 4.9 (120 reviews)" required>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="adminPackageVisits">Visits</label>
+                  <input type="number" id="adminPackageVisits" min="0" value="0">
+                </div>
+                <div class="form-group admin-checkbox-group">
+                  <label><input type="checkbox" id="adminPackageTop"> Top Destination</label>
+                  <label><input type="checkbox" id="adminPackageVisited"> Most Visited</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="adminPackageImage">Image URL</label>
+                <input type="text" id="adminPackageImage" placeholder="https://...">
+              </div>
+              <div class="form-group">
+                <label for="adminPackageFiles">Or upload image files (select multiple)</label>
+                <input type="file" id="adminPackageFiles" accept="image/*" multiple />
+              </div>
+              <div class="form-group">
+                <label for="adminPackageImageUrls">Additional image URLs (comma separated)</label>
+                <input type="text" id="adminPackageImageUrls" placeholder="https://..., https://..." />
+              </div>
+              <div class="form-group">
+                <label for="adminPackageSummary">Short Summary</label>
+                <textarea id="adminPackageSummary" rows="3" required></textarea>
+              </div>
+              <div class="form-group">
+                <label for="adminPackageDetails">Detailed Remarks</label>
+                <textarea id="adminPackageDetails" rows="5" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary btn-block">Save Package</button>
+              <button type="button" id="adminCancelEdit" class="btn btn-outline btn-block hidden">Cancel Edit</button>
+            </form>
+          </div>
+        </div>
+        <div class="admin-panel-right">
+          <div class="admin-card admin-list-card">
+            <h3>Manage Packages</h3>
+            <div id="adminPackageList" class="admin-package-list"></div>
+          </div>
+          <div class="admin-card admin-feature-card">
+            <h3>Featured Lists</h3>
+            <div class="admin-feature-section">
+              <h4>Top Destinations</h4>
+              <div id="adminTopDestList" class="admin-feature-list"></div>
+            </div>
+            <div class="admin-feature-section">
+              <h4>Most Visited Packages</h4>
+              <div id="adminVisitedList" class="admin-feature-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button id="adminLogoutBtn" class="btn btn-outline" type="button">Logout of Admin</button>
+    </div>
+  </section>
+  </main>
+
+  <script>
+    // If not logged in as admin, redirect back to home (admin login should be performed on home logo)
+    (function(){
+      try {
+        const isAdmin = localStorage.getItem('latrat_admin_session_v1') === 'true';
+        if (!isAdmin) {
+          window.location.href = 'index.html';
+        }
+      } catch(e){ window.location.href = 'index.html'; }
+    })();
+  </script>
+
+  <script>
+    // admin sign-out control
+    document.addEventListener('DOMContentLoaded', function(){
+      const btn = document.getElementById('adminSignOut');
+      if (btn) {
+        btn.addEventListener('click', function(){
+          try { localStorage.removeItem('latrat_admin_session_v1'); } catch(e){}
+          window.location.href = 'index.html';
+        });
+      }
+    });
+    // If this load was a page reload, redirect to home
+    try {
+      const nav = performance.getEntriesByType('navigation')[0];
+      if (nav && nav.type === 'reload') window.location.href = 'index.html';
+    } catch(e){}
+  </script>
+
+  <script src="script.js"></script>
+</body>
+</html>
