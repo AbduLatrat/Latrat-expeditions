@@ -80,8 +80,22 @@
     (function(){
       const params = new URLSearchParams(window.location.search);
       const id = params.get('id');
-      const pkg = findPackageById(id);
-      renderPackage(pkg);
+      // if this load was a page reload, go back to home
+      try { const nav = performance.getEntriesByType('navigation')[0]; if (nav && nav.type === 'reload') { window.location.href = 'index.html'; return; } } catch(e){}
+
+      // try to fetch packages from server first
+      (async function(){
+        let pkg = null;
+        try {
+          const res = await fetch('/packages');
+          if (res.ok) {
+            const data = await res.json();
+            pkg = (data || []).find(p=>p.id===id) || null;
+          }
+        } catch(e){}
+        if (!pkg) pkg = findPackageById(id);
+        renderPackage(pkg);
+      })();
     })();
   </script>
 </body>

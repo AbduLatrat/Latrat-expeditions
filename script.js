@@ -454,7 +454,7 @@ function resetAdminForm() {
   document.getElementById("adminCancelEdit").classList.add("hidden");
 }
 
-function handleAdminPackageForm(event) {
+async function handleAdminPackageForm(event) {
   event.preventDefault();
   const idInput = document.getElementById("adminPackageId");
   const title = document.getElementById("adminPackageTitle").value.trim();
@@ -466,6 +466,8 @@ function handleAdminPackageForm(event) {
   const rating = document.getElementById("adminPackageRating").value.trim();
   const visits = Number(document.getElementById("adminPackageVisits").value) || 0;
   const image = document.getElementById("adminPackageImage").value.trim();
+  const filesInput = document.getElementById("adminPackageFiles");
+  const extraUrlsInput = document.getElementById("adminPackageImageUrls");
   const summary = document.getElementById("adminPackageSummary").value.trim();
   const details = document.getElementById("adminPackageDetails").value.trim();
   const topDestination = document.getElementById("adminPackageTop").checked;
@@ -473,6 +475,27 @@ function handleAdminPackageForm(event) {
   if (!title || !location || !price || !rating || !summary || !details) {
     alert("Please complete all required package fields.");
     return;
+  }
+  // collect images: from text input, uploaded files, and extra URLs
+  let collectedImages = [];
+  if (image) collectedImages.push(image);
+  if (extraUrlsInput && extraUrlsInput.value.trim()) {
+    const parts = extraUrlsInput.value.split(',').map(s=>s.trim()).filter(Boolean);
+    collectedImages = collectedImages.concat(parts);
+  }
+  // upload files if any
+  if (filesInput && filesInput.files && filesInput.files.length) {
+    try {
+      const fd = new FormData();
+      for (const f of filesInput.files) fd.append('images', f);
+      const res = await fetch('/upload', { method: 'POST', body: fd });
+      if (res.ok) {
+        const j = await res.json();
+        if (j.files && Array.isArray(j.files)) collectedImages = collectedImages.concat(j.files);
+      } else {
+        console.warn('Image upload failed', await res.text());
+      }
+    } catch (e) { console.warn('Upload error', e); }
   }
   const packages = getStoredPackages();
   const editingId = idInput.value;
@@ -489,7 +512,8 @@ function handleAdminPackageForm(event) {
         price,
         rating,
         visits,
-        image: image || packages[existingIndex].image,
+        image: (collectedImages.length ? collectedImages[0] : (image || packages[existingIndex].image)),
+        images: (collectedImages.length ? collectedImages : (packages[existingIndex].images || [packages[existingIndex].image])),
         summary,
         details,
         highlights: packages[existingIndex].highlights || ["Signature safari itinerary", "Professional tour guide", "Comfortable accommodation"],
@@ -508,7 +532,8 @@ function handleAdminPackageForm(event) {
       price,
       rating,
       visits,
-      image: image || "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80",
+      image: (collectedImages.length ? collectedImages[0] : (image || "https://images.unsplash.com/photo-1500534314209-a25ddb2bd429?auto=format&fit=crop&w=900&q=80")),
+      images: (collectedImages.length ? collectedImages : []),
       summary,
       details,
       highlights: ["Signature safari itinerary", "Professional tour guide", "Comfortable accommodation"],
@@ -518,6 +543,10 @@ function handleAdminPackageForm(event) {
     packages.unshift(newPackage);
   }
   savePackages(packages);
+  // try persist to server and commit
+  try {
+    await fetch('/save-packages', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(packages) });
+  } catch (e) { console.warn('Save-packages failed', e); }
   renderAdminDashboard();
   resetAdminForm();
 }
