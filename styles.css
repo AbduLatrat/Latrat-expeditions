@@ -473,7 +473,7 @@ ul {
 .tour-buttons {
   display: flex;
   gap: 12px;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
 }
 
 .rating {
@@ -661,6 +661,12 @@ ul {
   color: var(--muted);
   font-size: 0.95rem;
 }
+
+/* Prevent users resizing textareas */
+textarea { resize: none; }
+
+/* Brand image styling */
+.brand-image { width: 42px; height: 42px; object-fit: contain; border-radius: 6px; }
 
 @media (max-width: 992px) {
   .admin-panel {

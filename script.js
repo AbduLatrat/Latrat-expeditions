@@ -342,15 +342,12 @@ function handleAdminLogin(event) {
   const email = emailInput.value.trim().toLowerCase();
   const password = passwordInput.value;
   if (email === ADMIN_EMAIL && password === ADMIN_PASSWORD) {
+    // persist session and redirect to the dedicated admin page
     setAdminLoggedIn(true);
     error.textContent = "";
     closeAdminLoginModal();
-    const adminSection = document.getElementById("adminSection");
-    if (adminSection) {
-      adminSection.classList.remove("hidden");
-      adminSection.scrollIntoView({ behavior: "smooth" });
-    }
-    renderAdminDashboard();
+    // redirect to admin page which will verify session and render dashboard
+    window.location.href = 'admin.html';
   } else {
     error.textContent = "Invalid admin credentials. Please try again.";
   }

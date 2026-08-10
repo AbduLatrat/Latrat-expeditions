@@ -5,12 +5,13 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Admin - Latrat Expeditions</title>
   <link rel="stylesheet" href="styles.css">
+  <link rel="icon" href="icon.jpg">
 </head>
 <body>
   <header class="navbar">
     <div class="nav-container">
       <a href="index.html" class="brand-logo">
-        <span class="logo-icon">🌍</span>
+        <img src="icon.jpg" alt="Latrat Expeditions" class="brand-image" />
         <span class="logo-text">Latrat <span>Expeditions</span></span>
       </a>
       <div style="margin-left:auto"><button id="adminSignOut" class="btn btn-outline">Sign out</button></div>
@@ -143,6 +144,19 @@
         }
       } catch(e){ window.location.href = 'index.html'; }
     })();
+  </script>
+
+  <script>
+    // admin sign-out control
+    document.addEventListener('DOMContentLoaded', function(){
+      const btn = document.getElementById('adminSignOut');
+      if (btn) {
+        btn.addEventListener('click', function(){
+          try { localStorage.removeItem('latrat_admin_session_v1'); } catch(e){}
+          window.location.href = 'index.html';
+        });
+      }
+    });
   </script>
 
   <script src="script.js"></script>
