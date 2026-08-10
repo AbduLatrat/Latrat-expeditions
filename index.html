@@ -15,7 +15,7 @@
   <!-- Navigation -->
   <header class="navbar">
     <div class="nav-container">
-      <a href="#" class="brand-logo">
+      <a href="#" id="brandLogo" class="brand-logo">
         <span class="logo-icon">🌍</span>
         <span class="logo-text">Latrat <span>Expeditions</span></span>
       </a>
@@ -175,71 +175,153 @@
         <p>Curated safari packages designed for unforgettable wildlife encounters.</p>
       </div>
 
-      <div class="grid grid-3" id="toursGrid">
-        
-        <!-- Tour Item 1 -->
-        <div class="tour-card" data-country="uganda" data-type="gorilla" data-duration="short">
-          <div class="card-img-wrapper">
-            <img src="https://images.unsplash.com/photo-1547471080-7cc2caa01a7e?auto=format&fit=crop&w=800&q=80" alt="Gorilla Trekking">
-            <span class="price-tag">$1,450 / person</span>
-          </div>
-          <div class="tour-content">
-            <div class="tour-meta">
-              <span>Duration: 3 Days</span>
-              <span>Location: Bwindi, Uganda</span>
-            </div>
-            <h3>Ultimate Gorilla Trekking Expedition</h3>
-            <p>Trek through Bwindi Impenetrable Forest for a face-to-face encounter with wild mountain gorillas.</p>
-            <div class="tour-footer">
-              <span class="rating">★ 4.9 (128 reviews)</span>
-              <button class="btn btn-outline" onclick="openBookingModal('3-Day Gorilla Trekking Bwindi')">Reserve Spot</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tour Item 2 -->
-        <div class="tour-card" data-country="kenya" data-type="safari" data-duration="medium">
-          <div class="card-img-wrapper">
-            <img src="https://images.unsplash.com/photo-1516426122078-c23e76319801?auto=format&fit=crop&w=800&q=80" alt="Serengeti Safari">
-            <span class="price-tag">$2,200 / person</span>
-          </div>
-          <div class="tour-content">
-            <div class="tour-meta">
-              <span>Duration: 7 Days</span>
-              <span>Location: Kenya & Tanzania</span>
-            </div>
-            <h3>Great Migration Big Five Safari</h3>
-            <p>Track the wildebeest herds across the Maasai Mara and Serengeti plains with luxury tented lodging.</p>
-            <div class="tour-footer">
-              <span class="rating">★ 5.0 (96 reviews)</span>
-              <button class="btn btn-outline" onclick="openBookingModal('7-Day Great Migration Safari')">Reserve Spot</button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Tour Item 3 -->
-        <div class="tour-card" data-country="tanzania" data-type="mountain" data-duration="medium">
-          <div class="card-img-wrapper">
-            <img src="https://images.unsplash.com/photo-1650668302197-7f556c34cb91?auto=format&fit=crop&w=800&q=80" alt="Kilimanjaro">
-            <span class="price-tag">$2,850 / person</span>
-          </div>
-          <div class="tour-content">
-            <div class="tour-meta">
-              <span>Duration: 8 Days</span>
-              <span>Location: Mt. Kilimanjaro</span>
-            </div>
-            <h3>Machame Route Kilimanjaro Summit</h3>
-            <p>Conquer Africa's highest peak with certified high-altitude mountain guides and full support crews.</p>
-            <div class="tour-footer">
-              <span class="rating">★ 4.8 (84 reviews)</span>
-              <button class="btn btn-outline" onclick="openBookingModal('8-Day Kilimanjaro Machame Route')">Reserve Spot</button>
-            </div>
-          </div>
-        </div>
-
-      </div>
+      <div class="grid grid-3" id="toursGrid"></div>
     </div>
   </section>
+
+  <!-- Admin Dashboard -->
+  <section class="section admin-section hidden" id="adminSection">
+    <div class="container">
+      <div class="section-header">
+        <span class="sub-title">Admin Dashboard</span>
+        <h2>Manage Safari Packages</h2>
+        <p>Use the dashboard to add, edit, and feature packages as top destinations or most visited journeys.</p>
+      </div>
+      <div class="admin-summary-grid">
+        <div class="admin-card"><span>Total Packages</span><strong id="adminTotalPackages">0</strong></div>
+        <div class="admin-card"><span>Top Destinations</span><strong id="adminTopPackages">0</strong></div>
+        <div class="admin-card"><span>Most Visited</span><strong id="adminVisitedPackages">0</strong></div>
+      </div>
+      <div class="admin-panel">
+        <div class="admin-panel-left">
+          <div class="admin-card admin-form-card">
+            <h3 id="adminFormTitle">Add New Package</h3>
+            <form id="adminPackageForm">
+              <input type="hidden" id="adminPackageId">
+              <div class="form-group">
+                <label for="adminPackageTitle">Package Title</label>
+                <input type="text" id="adminPackageTitle" required>
+              </div>
+              <div class="form-group">
+                <label for="adminPackageLocation">Location</label>
+                <input type="text" id="adminPackageLocation" required>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="adminPackageCountry">Country</label>
+                  <select id="adminPackageCountry">
+                    <option value="uganda">Uganda</option>
+                    <option value="kenya">Kenya</option>
+                    <option value="tanzania">Tanzania</option>
+                    <option value="rwanda">Rwanda</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="adminPackageType">Type</label>
+                  <select id="adminPackageType">
+                    <option value="safari">Wildlife Safari</option>
+                    <option value="gorilla">Gorilla Trekking</option>
+                    <option value="mountain">Mountain Adventure</option>
+                    <option value="cultural">Cultural Tour</option>
+                    <option value="beach">Beach Escape</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="adminPackageDuration">Duration</label>
+                  <select id="adminPackageDuration">
+                    <option value="short">1 - 4 Days</option>
+                    <option value="medium">5 - 9 Days</option>
+                    <option value="long">10+ Days</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="adminPackagePrice">Price</label>
+                  <input type="text" id="adminPackagePrice" placeholder="$1,999 / person" required>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="adminPackageRating">Rating</label>
+                <input type="text" id="adminPackageRating" placeholder="★ 4.9 (120 reviews)" required>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="adminPackageVisits">Visits</label>
+                  <input type="number" id="adminPackageVisits" min="0" value="0">
+                </div>
+                <div class="form-group admin-checkbox-group">
+                  <label><input type="checkbox" id="adminPackageTop"> Top Destination</label>
+                  <label><input type="checkbox" id="adminPackageVisited"> Most Visited</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="adminPackageImage">Image URL</label>
+                <input type="text" id="adminPackageImage" placeholder="https://...">
+              </div>
+              <div class="form-group">
+                <label for="adminPackageSummary">Short Summary</label>
+                <textarea id="adminPackageSummary" rows="3" required></textarea>
+              </div>
+              <div class="form-group">
+                <label for="adminPackageDetails">Detailed Remarks</label>
+                <textarea id="adminPackageDetails" rows="5" required></textarea>
+              </div>
+              <button type="submit" class="btn btn-primary btn-block">Save Package</button>
+              <button type="button" id="adminCancelEdit" class="btn btn-outline btn-block hidden">Cancel Edit</button>
+            </form>
+          </div>
+        </div>
+        <div class="admin-panel-right">
+          <div class="admin-card admin-list-card">
+            <h3>Manage Packages</h3>
+            <div id="adminPackageList" class="admin-package-list"></div>
+          </div>
+          <div class="admin-card admin-feature-card">
+            <h3>Featured Lists</h3>
+            <div class="admin-feature-section">
+              <h4>Top Destinations</h4>
+              <div id="adminTopDestList" class="admin-feature-list"></div>
+            </div>
+            <div class="admin-feature-section">
+              <h4>Most Visited Packages</h4>
+              <div id="adminVisitedList" class="admin-feature-list"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <button id="adminLogoutBtn" class="btn btn-outline" type="button">Logout of Admin</button>
+    </div>
+  </section>
+
+  <!-- Package Detail Modal -->
+  <div class="modal-overlay" id="packageDetailModal">
+    <div class="modal-box detail-modal-box">
+      <button class="modal-close" onclick="closePackageDetail()">&times;</button>
+      <div id="packageDetailContent"></div>
+    </div>
+  </div>
+
+  <!-- Admin Login Modal -->
+  <div class="modal-overlay" id="adminLoginModal">
+    <div class="modal-box admin-login-box">
+      <button class="modal-close" onclick="closeAdminLoginModal()">&times;</button>
+      <h3>Admin Sign In</h3>
+      <form id="adminLoginForm">
+        <div class="form-group">
+          <label for="adminEmail">Email Address</label>
+          <input type="email" id="adminEmail" required>
+        </div>
+        <div class="form-group">
+          <label for="adminPassword">Password</label>
+          <input type="password" id="adminPassword" required>
+        </div>
+        <div id="adminLoginError" class="admin-error"></div>
+        <button type="submit" class="btn btn-primary btn-block">Sign In</button>
+      </form>
+      <p class="admin-login-tip">Long press or double-click the Latrat Expeditions logo to open admin login.</p>
+    </div>
+  </div>
 
   <!-- About / Why Choose Us -->
   <section class="section" id="about">
