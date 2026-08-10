@@ -302,36 +302,10 @@ function renderTours() {
 }
 
 function openPackageDetail(packageId) {
-  const packages = getStoredPackages();
-  const pkg = packages.find((item) => item.id === packageId);
-  if (!pkg) return;
-  const content = document.getElementById("packageDetailContent");
-  if (!content) return;
-  content.innerHTML = `
-    <div class="detail-header">
-      <span class="detail-badge">${pkg.topDestination ? "Top Destination" : pkg.mostVisited ? "Most Visited" : "Featured"}</span>
-      <h2>${pkg.title}</h2>
-      <p class="detail-location">${pkg.location}</p>
-      <div class="detail-meta">
-        <span>${pkg.price}</span>
-        <span>${pkg.rating}</span>
-        <span>${pkg.visits} visits</span>
-      </div>
-      <div class="detail-image-wrapper">
-        <img src="${pkg.image}" alt="${pkg.title}">
-      </div>
-      <p class="detail-summary">${pkg.details}</p>
-      <div class="detail-highlights">
-        <h4>What to expect</h4>
-        <ul>${pkg.highlights.map((item) => `<li>${item}</li>`).join("")}</ul>
-      </div>
-      <button class="btn btn-primary btn-block" onclick="openBookingModal('${pkg.title}')">Book This Package</button>
-    </div>
-  `;
-  const modal = document.getElementById("packageDetailModal");
-  if (modal) {
-    modal.classList.add("active");
-  }
+  // Navigate to the package details page for a full-screen, dedicated view
+  if (!packageId) return;
+  const href = `package.html?id=${encodeURIComponent(packageId)}`;
+  window.location.href = href;
 }
 
 function closePackageDetail() {
